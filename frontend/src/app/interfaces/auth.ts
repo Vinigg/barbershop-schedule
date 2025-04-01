@@ -1,9 +1,10 @@
 export interface Appointment {
-  id: string;
+  id: number;
   email: string;
   name: string;
   phone: string;
   date: string;
-  time:string;
+  time: string;
 
 }
+

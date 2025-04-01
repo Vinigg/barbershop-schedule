@@ -1,3 +1,12 @@
 {
-  "appointments": []
+  "appointments": [
+    {
+      "email": "teste1@gmail.com",
+      "name": "Teste Um",
+      "phone": "11111111111",
+      "date": "2025-04-04T03:00:00.000Z",
+      "time": "13:55",
+      "id": 1
+    }
+  ]
 }

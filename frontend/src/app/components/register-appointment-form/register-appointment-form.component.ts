@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { Appointment } from '../../interfaces/auth';
 import { MessageService } from 'primeng/api';
 import { Router, RouterModule } from '@angular/router';
+import { UtilsService } from '../../services/utils.service';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class RegisterAppointmentFormComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private messageService: MessageService,
-    private router: Router
+    private utils: UtilsService
   ){
     this.registerAppointmentForm = this.fb.group({
       email:['',[Validators.required, Validators.email]],
@@ -55,14 +56,18 @@ export class RegisterAppointmentFormComponent {
     const formValue = this.registerAppointmentForm.value;
     const timeDate = new Date(formValue.time);
     delete formValue.dateSelector;
+    const formattedPhone = this.utils.formatPhoneNumber(formValue.phone);
 
-    const postData = {...formValue, time: `${timeDate.getHours().toString().padStart(2, '0')}:${timeDate.getMinutes().toString().padStart(2, '0')}`}
+    const postData = {
+      ...formValue,
+      phone: formattedPhone,
+      time: `${timeDate.getHours().toString().padStart(2, '0')}:${timeDate.getMinutes().toString().padStart(2, '0')}`
+    }
 
     this.authService.registerAppointment(postData as Appointment).subscribe(
       response => {
         console.log(response)
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Appointment successfully registered', life: 3000 });
-        this.router.navigate(['update'])
       },
       error => {
         console.log(error)

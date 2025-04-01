@@ -12,6 +12,7 @@ import { InputIcon } from 'primeng/inputicon';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { Appointment } from '../../interfaces/auth';
+import { UtilsService } from '../../services/utils.service';
 
 @Component({
   selector: 'app-update-appointment',
@@ -24,7 +25,8 @@ export class UpdateAppointmentComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private msgService: MessageService
+    private msgService: MessageService,
+    private utils: UtilsService
   ){
     this.updateAppointmentForm = this.fb.group({
       id: [],
@@ -51,12 +53,11 @@ export class UpdateAppointmentComponent {
   }
   searchAppointment(){
     const {email} = this.updateAppointmentForm.value
-    this.authService.getAppointmentByUserEmail(email as string).subscribe({
-      next: (response) =>{
-        if(response.length > 0)
+    this.authService.getAppointmentByEmail(email as string).subscribe({
+      next: (response) => {
+        if(!!response)
         {
-          const appointment = response[0];
-          console.log(appointment)
+          const appointment = response;
           this.updateAppointmentForm.patchValue({
             id: appointment.id,
             name: appointment.name,
@@ -68,6 +69,7 @@ export class UpdateAppointmentComponent {
 
           this.updateAppointmentForm.get('name')?.markAsTouched();
           this.updateAppointmentForm.get('phone')?.markAsTouched();
+
         } else{
           this.msgService.add({ severity: 'error', summary: 'Error', detail: 'Appointment not found', life: 3000 });
         }
@@ -90,8 +92,14 @@ export class UpdateAppointmentComponent {
     const formValue = this.updateAppointmentForm.value;
     const timeDate = new Date(formValue.time);
     delete formValue.dateSelector;
+    const formattedPhone = this.utils.formatPhoneNumber(formValue.phone);
 
-    const postData = {...formValue}
+
+    const postData = {
+      ...formValue,
+      phone: formattedPhone,
+      time: `${timeDate.getHours().toString().padStart(2, '0')}:${timeDate.getMinutes().toString().padStart(2, '0')}`
+    }
     this.authService.patchAppointment(postData as Appointment).subscribe(
       response =>  {this.msgService.add({ severity: 'success', summary: 'Success', detail: 'Appointment successfully updated', life: 3000 });},
       error => {

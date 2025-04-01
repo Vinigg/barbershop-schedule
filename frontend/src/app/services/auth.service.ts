@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private baseUrl = 'http://localhost:3000'
+  private baseUrl = 'http://localhost:8080'
 
   constructor(private http: HttpClient) { }
 
@@ -16,8 +16,8 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/appointments`, appointmentDetails);
   }
 
-  getAppointmentByUserEmail(email:string):Observable<Appointment[]>{
-    return this.http.get<Appointment[]>(`${this.baseUrl}/appointments?email=${email}`);
+  getAppointmentByEmail(email:string):Observable<Appointment>{
+    return this.http.get<Appointment>(`${this.baseUrl}/appointments/${email}`);
   }
 
   patchAppointment(appointmentDetails:Appointment){
