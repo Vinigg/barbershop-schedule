@@ -2,6 +2,10 @@ import { RouterModule,Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { RegisterAppointmentComponent } from './components/register-appointment/register-appointment.component';
 import { UpdateAppointmentComponent } from './components/update-appointment/update-appointment.component';
+import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
+import { authGuard } from './guards/auth.guard';
+import { loginGuard } from './guards/login.guard';
 
 export const routes: Routes = [
   {
@@ -11,6 +15,16 @@ export const routes: Routes = [
   {
     path:'update',
     component: UpdateAppointmentComponent
+  },
+  {
+    path:'login',
+    component:LoginComponent,
+    canActivate:[loginGuard]
+  },
+  {
+    path:'home',
+    component:HomeComponent,
+    canActivate: [authGuard]
   },
   {
     path:'**',

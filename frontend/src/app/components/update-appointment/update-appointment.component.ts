@@ -9,10 +9,10 @@ import { NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
-import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
-import { Appointment } from '../../interfaces/auth';
 import { UtilsService } from '../../services/utils.service';
+import { AppointmentService } from '../../services/appointment.service';
+import { Appointment } from '../../interfaces/apointment';
 
 @Component({
   selector: 'app-update-appointment',
@@ -24,7 +24,7 @@ export class UpdateAppointmentComponent {
   updateAppointmentForm: FormGroup;
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private appointmentService: AppointmentService,
     private msgService: MessageService,
     private utils: UtilsService
   ){
@@ -53,7 +53,7 @@ export class UpdateAppointmentComponent {
   }
   searchAppointment(){
     const {email} = this.updateAppointmentForm.value
-    this.authService.getAppointmentByEmail(email as string).subscribe({
+    this.appointmentService.getAppointmentByEmail(email as string).subscribe({
       next: (response) => {
         if(!!response)
         {
@@ -100,7 +100,7 @@ export class UpdateAppointmentComponent {
       phone: formattedPhone,
       time: `${timeDate.getHours().toString().padStart(2, '0')}:${timeDate.getMinutes().toString().padStart(2, '0')}`
     }
-    this.authService.patchAppointment(postData as Appointment).subscribe(
+    this.appointmentService.patchAppointment(postData as Appointment).subscribe(
       response =>  {this.msgService.add({ severity: 'success', summary: 'Success', detail: 'Appointment successfully updated', life: 3000 });},
       error => {
         console.log(error)
@@ -111,7 +111,7 @@ export class UpdateAppointmentComponent {
   submitDelete(){
     const formValue = this.updateAppointmentForm.value;
 
-    this.authService.deleteAppointment(formValue.id).subscribe(
+    this.appointmentService.deleteAppointment(formValue.id).subscribe(
       response => {this.msgService.add({ severity: 'warn', summary: 'Warning', detail: 'Appointment successfully deleted', life: 5000 });},
       error => {
         console.log(error)

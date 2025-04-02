@@ -1,0 +1,34 @@
+<div class="card">
+  <p-table [value]="(appointments$ | async) ?? []" stripedRows [tableStyle]="{'min-width': '50rem'}">
+      <ng-template #header>
+          <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Del.</th>
+          </tr>
+      </ng-template>
+      <ng-template #body let-appointment>
+          <tr>
+              <td>{{appointment.id}}</td>
+              <td>{{appointment.name}}</td>
+              <td>{{appointment.email}}</td>
+              <td>{{appointment.phone}}</td>
+              <td>{{appointment.date}}</td>
+              <td>{{appointment.time}}</td>
+              <td><p-button
+                icon="pi pi-times"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                size="small"
+                (onClick)="deleteAppointment(appointment.id)"
+                [loading]="loading[appointment.id]"
+              /></td>
+          </tr>
+      </ng-template>
+  </p-table>
+</div>

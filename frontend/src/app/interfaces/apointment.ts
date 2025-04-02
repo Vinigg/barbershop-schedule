@@ -5,6 +5,4 @@ export interface Appointment {
   phone: string;
   date: string;
   time: string;
-
 }
-

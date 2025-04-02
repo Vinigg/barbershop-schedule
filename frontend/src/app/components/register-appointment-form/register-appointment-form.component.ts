@@ -5,11 +5,11 @@ import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputMaskModule } from 'primeng/inputmask';
 import { NgIf } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
-import { Appointment } from '../../interfaces/auth';
 import { MessageService } from 'primeng/api';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { UtilsService } from '../../services/utils.service';
+import { AppointmentService } from '../../services/appointment.service';
+import { Appointment } from '../../interfaces/apointment';
 
 
 @Component({
@@ -24,7 +24,7 @@ export class RegisterAppointmentFormComponent {
   registerAppointmentForm: FormGroup;
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private appointmentService: AppointmentService,
     private messageService: MessageService,
     private utils: UtilsService
   ){
@@ -64,7 +64,7 @@ export class RegisterAppointmentFormComponent {
       time: `${timeDate.getHours().toString().padStart(2, '0')}:${timeDate.getMinutes().toString().padStart(2, '0')}`
     }
 
-    this.authService.registerAppointment(postData as Appointment).subscribe(
+    this.appointmentService.registerAppointment(postData as Appointment).subscribe(
       response => {
         console.log(response)
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Appointment successfully registered', life: 3000 });

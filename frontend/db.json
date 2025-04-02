@@ -8,5 +8,13 @@
       "time": "13:55",
       "id": 1
     }
+  ],
+  "users": [
+    {
+      "email": "teste1@email.com",
+      "name": "Teste Um",
+      "password": "123",
+      "id": 1
+    }
   ]
 }
