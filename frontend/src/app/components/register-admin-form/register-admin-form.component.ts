@@ -8,6 +8,7 @@ import { passwordMatchValidator } from '../../shared/password-match.directive';
 import { MessageService } from 'primeng/api';
 import { UserService } from '../../services/user.service';
 import { User } from '../../interfaces/user';
+import { uniqueEmailValidator } from '../../shared/unique-email.directive';
 
 @Component({
   selector: 'app-register-admin-form',
@@ -22,7 +23,11 @@ export class RegisterAdminFormComponent {
     private userService: UserService,
     private messageService: MessageService ){
     this.registerAdminForm = this.fb.group({
-      email:['',[Validators.required, Validators.email]],
+      email:[
+        '',
+        [Validators.required, Validators.email],
+        [uniqueEmailValidator(this.userService)]
+      ],
       name:['', Validators.required],
       password:['', [Validators.required]],
       confirmPassword: ['',[Validators.required]]

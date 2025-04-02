@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-public class Appointment {
+@Table(name = "user_tb")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +21,5 @@ public class Appointment {
     private String name;
 
     @Column(nullable = false)
-    private String phone;
-
-    @Column(nullable = false)
-    private String date;
-
-    @Column(nullable = false)
-    private String time;
+    private String password;
 }

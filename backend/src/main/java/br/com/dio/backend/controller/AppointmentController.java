@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/appointments")
 public class AppointmentController {
@@ -23,8 +25,20 @@ public class AppointmentController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping
+    public ResponseEntity<List<AppointmentResponseDTO>> getAllAppointments() {
+        List<AppointmentResponseDTO> appointments = service.getAllAppointments();
+        return ResponseEntity.ok(appointments);
+    }
+
+    @GetMapping("/check-email/{email}")
+    public ResponseEntity<Boolean> checkEmailUnique(@PathVariable String email) {
+        boolean exists = service.checkEmail(email);
+        return ResponseEntity.ok(!exists); // Retorna true se o e-mail for único
+    }
+
     @GetMapping("/{email}")
-    public ResponseEntity<AppointmentResponseDTO> getAppointment(@PathVariable String email){
+    public ResponseEntity<AppointmentResponseDTO> getAppointmentByEmail(@PathVariable String email){
         AppointmentResponseDTO response= service.findByEmail(email);
         if (response == null) {
             return ResponseEntity.notFound().build(); // Retorna 404
@@ -35,7 +49,7 @@ public class AppointmentController {
     @PatchMapping("/{id}")
     public ResponseEntity<AppointmentResponseDTO> patchAppointment(@PathVariable Long id,
                                                                    @Valid @RequestBody AppointmentRequestDTO requestDTO) {
-        // 1. Validação básica (opcional)
+        // 1. Validação básica
         if (id == null || requestDTO == null) {
             return ResponseEntity.badRequest().build();
         }

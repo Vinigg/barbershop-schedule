@@ -1,5 +1,6 @@
 package br.com.dio.backend.service.implementations;
 
+import br.com.dio.backend.exceptions.BusinessRuleException;
 import br.com.dio.backend.model.dto.AppointmentRequestDTO;
 import br.com.dio.backend.model.dto.AppointmentResponseDTO;
 import br.com.dio.backend.model.entity.Appointment;
@@ -9,6 +10,9 @@ import br.com.dio.backend.service.AppointmentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -20,6 +24,22 @@ public class AppointmentServiceImpl implements AppointmentService {
     private AppointmentMapper mapper;
 
     @Override
+    public boolean checkEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+    @Override
+    public List<AppointmentResponseDTO> getAllAppointments() {
+        List<Appointment> appointments;
+
+        appointments = repository.findAll(); // Busca todos
+
+        return appointments.stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public AppointmentResponseDTO findByEmail(String email) {
         Appointment appointmentFound = repository.findByEmail(email);
         return mapper.toDTO(appointmentFound);
@@ -27,6 +47,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentResponseDTO create(AppointmentRequestDTO request) {
+        if (repository.existsByEmail(request.getEmail())) {
+            throw new BusinessRuleException("Já existe um agendamento com este e-mail.");
+        }
         Appointment entity = mapper.toEntity(request);
         Appointment savedEntity = repository.save(entity);
         return mapper.toDTO(savedEntity);

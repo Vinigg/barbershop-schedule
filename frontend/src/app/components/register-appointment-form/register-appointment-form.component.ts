@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { UtilsService } from '../../services/utils.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { Appointment } from '../../interfaces/apointment';
+import { uniqueEmailValidator } from '../../shared/unique-email.directive';
 
 
 @Component({
@@ -29,7 +30,10 @@ export class RegisterAppointmentFormComponent {
     private utils: UtilsService
   ){
     this.registerAppointmentForm = this.fb.group({
-      email:['',[Validators.required, Validators.email]],
+      email:['',
+        [Validators.required, Validators.email],
+        [uniqueEmailValidator(this.appointmentService)]
+      ],
       name:['',Validators.required],
       phone: ['',Validators.required],
       date:[null],

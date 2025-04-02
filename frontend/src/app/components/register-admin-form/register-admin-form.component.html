@@ -8,6 +8,7 @@
       >
       <div *ngIf="email?.errors?.['required']">Email is required.</div>
       <div *ngIf="email?.errors?.['email']">Email should be valid</div>
+      <div *ngIf="registerAdminForm.get('email')?.hasError('emailNotUnique')" > This email is already used </div>
       </small>
     </div>
     <div class="field">

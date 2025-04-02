@@ -34,7 +34,7 @@ export class LoginFormComponent {
     this.userService.getUserByEmail(email as string).subscribe(
       response =>{
         console.log(response)
-        if(response && response[0].password === password){
+        if(response && response.password === password){
           sessionStorage.setItem('email',email as string)
           this.router.navigate(['/home'])
         } else{
