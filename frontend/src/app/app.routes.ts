@@ -1,5 +1,4 @@
 import { RouterModule,Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
 import { RegisterAppointmentComponent } from './components/register-appointment/register-appointment.component';
 import { UpdateAppointmentComponent } from './components/update-appointment/update-appointment.component';
 import { LoginComponent } from './components/login/login.component';

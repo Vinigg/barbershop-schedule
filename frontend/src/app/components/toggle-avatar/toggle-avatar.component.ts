@@ -4,6 +4,8 @@ import { TieredMenu } from 'primeng/tieredmenu';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'toggle-avatar',
@@ -12,28 +14,27 @@ import { Router } from '@angular/router';
     imports: [TieredMenu, ButtonModule, AvatarModule]
 })
 export class ToggleAvatar implements OnInit {
-    constructor(private router: Router) {}
+    constructor(private router: Router,private authService: AuthService) {}
 
     items: MenuItem[] = [];
-    isLoggedIn = false;
+    private authSubscription!: Subscription;
+
 
     ngOnInit() {
-        this.checkAuthStatus();
-        this.updateMenuItems();
+      this.authService.checkAuthStatus();
+
+      this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+        this.updateMenuItems(isLoggedIn);
+      });
     }
 
-    checkAuthStatus() {
-        // Verifica se existe email no sessionStorage
-        this.isLoggedIn = !!sessionStorage.getItem('email');
-
-        // Opcional: observar mudanças no storage
-        window.addEventListener('storage', () => {
-            this.isLoggedIn = !!sessionStorage.getItem('email');
-            this.updateMenuItems();
-        });
+    ngOnDestroy() {
+      if (this.authSubscription) {
+        this.authSubscription.unsubscribe();
+      }
     }
 
-    updateMenuItems() {
+    updateMenuItems(isLoggedIn: boolean) {
         this.items = [
             {
                 label: 'Config',
@@ -42,7 +43,7 @@ export class ToggleAvatar implements OnInit {
             {
                 separator: true
             },
-            this.isLoggedIn
+            isLoggedIn
                 ? {
                     label: 'Logout',
                     icon: 'pi pi-sign-out',
@@ -57,13 +58,11 @@ export class ToggleAvatar implements OnInit {
     }
 
     login() {
-        this.router.navigate(['/login']);
+      this.router.navigate(['/login']);
     }
 
     logout() {
-        sessionStorage.removeItem('email');
-        this.isLoggedIn = false;
-        this.updateMenuItems();
-        this.router.navigate(['/']); // Redireciona para home ou login
+      this.authService.logout();
+      this.router.navigate(['/']); // Redireciona para home ou login
     }
 }

@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
 import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login-form',
@@ -16,7 +17,7 @@ import { UserService } from '../../services/user.service';
 export class LoginFormComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder,private userService: UserService, private router:Router, private messageService: MessageService){
+  constructor(private fb: FormBuilder,private userService: UserService, private router:Router, private messageService: MessageService,private authService: AuthService){
     this.loginForm = this.fb.group({
       email:['',[Validators.required, Validators.email]],
       password:['', [Validators.required]]
@@ -35,7 +36,7 @@ export class LoginFormComponent {
       response =>{
         console.log(response)
         if(response && response.password === password){
-          sessionStorage.setItem('email',email as string)
+          this.authService.login(email)
           this.router.navigate(['/home'])
         } else{
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Credentials are invalid', life: 3000 });
