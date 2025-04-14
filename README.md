@@ -51,6 +51,8 @@ A página simula a interação do cliente, onde ele informa seus dados e escolhe
 
 Ao clickar em "Edit" na página de marcação, o cliente será redirecionado para uma tela onde poderá buscar por um horário já reservado.
 
+Caso um horário seja encontrado ele será carregado na tela, o cliente poderá atualizar as informações ou deleta-lo. 
+
 <div align="center">
     <img src="assets/image-2.png">
  </div>
